@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable
 {
@@ -45,18 +46,10 @@ class User extends Authenticatable
         ];
     }
 
-    public function isSuperAdmin()
+    protected function type(): Attribute
     {
-        return $this->role === 'Super Admin';
-    }
-
-    public function isAdmin()
-    {
-        return $this->role === 'Admin';
-    }
-
-    public function isCustomer()
-    {
-        return $this->role === 'Customer';
+        return new Attribute(
+            get: fn($value) =>  ["Customer", "Admin", "Super Admin"][$value],
+        );
     }
 }
